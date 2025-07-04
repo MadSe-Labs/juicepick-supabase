@@ -20,11 +20,11 @@ CREATE TABLE product_price
 (
     id                uuid PRIMARY KEY DEFAULT uuid_generate_v4(), -- 가격 정보 고유 식별자
     product_id        uuid REFERENCES liquid_product (id),         -- 연관된 제품 식별자
-    shop_name         text NOT NULL, ,                             -- 판매처 이름
-    price             INT  NOT NULL, ,                             -- 판매가(원)
+    shop_name         text NOT NULL,                               -- 판매처 이름
+    price             INT  NOT NULL,                               -- 판매가(원)
     delivery_fee      INT,                                         -- 배송비(원)
     is_free_delivery  boolean,                                     -- 무료 배송 여부
     is_today_delivery boolean,                                     -- 당일 배송 가능 여부
-    shop_url          text NOT NULL, ,                             -- 판매처 상품 페이지 URL
+    shop_url          text NOT NULL,                               -- 판매처 상품 페이지 URL
     created_at        TIMESTAMP        DEFAULT now()               -- 레코드 생성 시각
 );
