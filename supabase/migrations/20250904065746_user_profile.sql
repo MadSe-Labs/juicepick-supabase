@@ -11,6 +11,35 @@ create table if not exists public.user_profile (
 -- RLS
 ALTER TABLE public.user_profile enable ROW LEVEL SECURITY;
 
+-- 2) 공개 읽기 (닉네임/아바타 공개)
+CREATE
+POLICY "user_profile select public"
+  ON PUBLIC.user_profile
+  AS PERMISSIVE
+  FOR
+SELECT
+    TO PUBLIC
+    USING (TRUE);
+
+-- 3) 본인만 작성
+CREATE
+POLICY "user_profile insert self"
+  ON PUBLIC.user_profile
+       AS PERMISSIVE
+  FOR INSERT
+  WITH CHECK ((SELECT auth.uid()) = id);  -- PK가 id면 id로 변경
+
+-- 4) 본인만 수정
+CREATE
+POLICY "user_profile update self"
+  ON PUBLIC.user_profile
+       AS PERMISSIVE
+  FOR
+UPDATE
+    to PUBLIC
+    USING (auth.uid() = id); -- PK가 id면 id로 변경
+
+
 -- inserts a row into public.profiles
 CREATE FUNCTION public.handle_new_user()
     RETURNS trigger

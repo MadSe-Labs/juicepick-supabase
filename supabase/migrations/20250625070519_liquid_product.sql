@@ -8,7 +8,6 @@ CREATE TABLE liquid_product
     volume          INT,                                             -- 용량(ml)
     pg_ratio        INT,                                             -- PG 비율(%)
     vg_ratio        INT,                                             -- VG 비율(%)
-    flavor          text,                                            -- 맛
     description     text,                                            -- 상세 설명
     inhalation_type text,                                            -- 흡입 유형
     created_at      timestamptz NOT NULL DEFAULT now(),              -- 레코드 생성 시각
@@ -26,3 +25,27 @@ CREATE TABLE product_price
     created_at     timestamptz NOT NULL DEFAULT now(),              -- 레코드 생성 시각
     updated_at     timestamptz NOT NULL DEFAULT now()               -- 레코드 수정 시각
 );
+
+
+-- RLS 켜기
+ALTER TABLE public.liquid_product enable ROW LEVEL SECURITY;
+ALTER TABLE public.product_price enable ROW LEVEL SECURITY;
+
+-- 모두 읽기 허용 (anon/authenticated 포함)
+CREATE
+policy "liquid_product read all"
+ON PUBLIC.liquid_product
+  AS PERMISSIVE
+FOR
+SELECT
+    TO PUBLIC
+    USING (TRUE);
+
+CREATE
+policy "product_price read all"
+ON PUBLIC.product_price
+  AS PERMISSIVE
+FOR
+SELECT
+    TO PUBLIC
+    USING (TRUE);
